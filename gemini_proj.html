@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Tie Breaker</title>
+    <style>
+        :root {
+            --primary: #4F46E5;
+            --background: #F9FAFB;
+            --surface: #FFFFFF;
+            --text: #111827;
+            --text-secondary: #6B7280;
+            --border: #E5E7EB;
+        }
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            background-color: var(--background);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .header h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .header p {
+            color: var(--text-secondary);
+        }
+        .card {
+            background-color: var(--surface);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 1rem;
+            box-sizing: border-box;
+        }
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+        .btn {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            transition: background-color 0.2s;
+        }
+        .btn:hover {
+            background-color: #4338CA;
+        }
+        .results-area {
+            display: none;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        th {
+            background-color: var(--background);
+            font-weight: 600;
+        }
+        .verdict {
+            background-color: #EEF2FF;
+            padding: 1.5rem;
+            border-left: 4px solid var(--primary);
+            border-radius: 4px;
+            margin-top: 2rem;
+        }
+        .loading {
+            text-align: center;
+            display: none;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 2rem 0;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>The Tie Breaker</h1>
+        <p>Enter your dilemma. Get a side-by-side breakdown and a clear verdict.</p>
+    </div>
+
+    <div class="card">
+        <form id="decisionForm">
+            <div class="form-group">
+                <label for="optionA">Option A</label>
+                <input type="text" id="optionA" placeholder="e.g., Take the new job in Chicago" required>
+            </div>
+            <div class="form-group">
+                <label for="optionB">Option B</label>
+                <input type="text" id="optionB" placeholder="e.g., Stay at my current job in Austin" required>
+            </div>
+            <div class="form-group">
+                <label for="context">What matters most to you right now? (Optional)</label>
+                <textarea id="context" placeholder="e.g., I want to maximize my savings, but I also value a good work-life balance..."></textarea>
+            </div>
+            <button type="button" class="btn" onclick="breakTie()">Break the Tie</button>
+        </form>
+    </div>
+
+    <div class="loading" id="loadingState">
+        Analyzing trade-offs and identifying the hidden variable...
+    </div>
+
+    <div class="card results-area" id="resultsArea">
+        <h2>The Breakdown</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Factor</th>
+                        <th id="headerA">Option A</th>
+                        <th id="headerB">Option B</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Populated by JS -->
+                </tbody>
+            </table>
+        </div>
+
+        <h3>The Hidden Variable</h3>
+        <p id="hiddenVariableText">...</p>
+
+        <div class="verdict">
+            <h3>The Verdict</h3>
+            <p id="verdictText">...</p>
+        </div>
+    </div>
+
+    <script>
+        function breakTie() {
+            const optA = document.getElementById('optionA').value;
+            const optB = document.getElementById('optionB').value;
+            const context = document.getElementById('context').value;
+
+            if (!optA || !optB) {
+                alert("Please enter both options to break the tie.");
+                return;
+            }
+
+            // Show loading state
+            document.getElementById('resultsArea').style.display = 'none';
+            document.getElementById('loadingState').style.display = 'block';
+
+            /* 
+             * TO MAKE THIS APP FULLY FUNCTIONAL:
+             * Here is where you would make an API call to an AI service (like the Gemini API).
+             * You would pass optA, optB, and context as the prompt, asking it to return JSON
+             * containing the pros/cons, hidden variable, and verdict.
+             */
+
+            // Simulating an AI API response delay for the prototype
+            setTimeout(() => {
+                document.getElementById('loadingState').style.display = 'none';
+                
+                // Set headers
+                document.getElementById('headerA').textContent = optA;
+                document.getElementById('headerB').textContent = optB;
+
+                // Mock data population (Replace with real AI response data)
+                const tableBody = document.getElementById('tableBody');
+                tableBody.innerHTML = `
+                    <tr>
+                        <td><strong>Pros</strong></td>
+                        <td>AI generated pros for Option A</td>
+                        <td>AI generated pros for Option B</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Cons</strong></td>
+                        <td>AI generated cons for Option A</td>
+                        <td>AI generated cons for Option B</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Trade-off</strong></td>
+                        <td>What you sacrifice by choosing this</td>
+                        <td>What you sacrifice by choosing this</td>
+                    </tr>
+                `;
+
+                document.getElementById('hiddenVariableText').textContent = "This is where the AI points out a crucial factor you haven't considered yet based on your context.";
+                document.getElementById('verdictText').textContent = "Based on your stated priority, Option A is the logical choice because...";
+
+                document.getElementById('resultsArea').style.display = 'block';
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
